@@ -9,7 +9,10 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-
+import { auth } from '../firebase';
+import { register } from "../services/auth/requests";
+import { useAppDispatch } from "../hooks";
+import { setToken } from "../redux/auth.slice";
 
 interface AuthenticationProps {
   isRegistration: boolean,
@@ -19,6 +22,24 @@ const Authentication = ({
     isRegistration,
 }: AuthenticationProps) => {
   const [hidePass, setHidePass] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const dispatch = useAppDispatch();
+
+  const handleSubmit = async() => {
+    const registerUser = await register(auth, email, password)
+    .then(async(userCredential) => {
+      const token = await userCredential.user.getIdToken()
+      dispatch(setToken(token))
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+      // ..
+    });
+  };
+
   return (
     <Box
       sx={{
@@ -41,17 +62,15 @@ const Authentication = ({
           {isRegistration ? "Register Form" : "Log in Forn"}
         </Typography>
         <TextField
-          id="outlined-multiline-flexible"
           label="Email"
-          multiline
-          maxRows={4}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <Box sx={{ position: "relative" }}>
           <TextField
-            id="outlined-multiline-flexible"
             label="Password"
             type={`${hidePass ? "password" : "text"}`}
             sx={{ width: "100%" }}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <IconButton
             aria-label="show-password"
@@ -63,7 +82,6 @@ const Authentication = ({
             ): (
              <VisibilityIcon />
             )}
-            
           </IconButton>
         </Box>
         <Button
@@ -74,6 +92,7 @@ const Authentication = ({
             width: "20%",
             alignSelf: "end",
           }}
+          onClick={handleSubmit}
         >
           Submit
         </Button>

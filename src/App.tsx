@@ -1,8 +1,11 @@
 import { Box } from "@mui/material";
 import "./App.css";
 import Home from "./views/Home";
+import Authentication from "./views/Authentication";
+import { useAppSelector } from "./hooks";
 
 function App() {
+  const token = useAppSelector((state) => state.auth.token);
   return (
     <Box
       sx={{
@@ -12,8 +15,12 @@ function App() {
         height: "100%",
         width: "100%",
       }}
-    >
-      <Home />
+    > 
+    {token ? (
+     <Home />
+    ): (
+      <Authentication isRegistration />
+    )}
     </Box>
   );
 }
