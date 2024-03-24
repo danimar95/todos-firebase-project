@@ -11,7 +11,6 @@ const CardList = () => {
       display="flex"
       justifyContent="center"
       alignItems="center"
-      minHeight="100vh"
       height="80vh"
       overflow="auto"
     >
@@ -25,9 +24,9 @@ const CardList = () => {
           minWidth: 500,
         }}
       >
-        <CardContent>
+        <CardContent sx={{p:0}}>
           <Box display="flex" justifyContent="space-between">
-            <CardHeader title="To Dos App with ReactJS" />
+            <CardHeader title="To Dos App" />
             <Button
               sx={{
                 borderRadius: 2,

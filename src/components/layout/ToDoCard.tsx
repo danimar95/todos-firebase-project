@@ -1,4 +1,12 @@
-import { Box, Card, CardContent, CardHeader, Grid, IconButton } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import EditIcon from "@mui/icons-material/Edit";
@@ -25,7 +33,7 @@ const ToDoCard = ({ title, completed, isOpen, setIsOpen }: TodoCardProps) => {
           minWidth: 500,
         }}
       >
-        <CardContent>
+        <CardContent sx={{display: 'flex', gap: 3, flexDirection: 'column'}}>
           <Grid container spacing={2}>
             <Grid
               item
@@ -34,34 +42,39 @@ const ToDoCard = ({ title, completed, isOpen, setIsOpen }: TodoCardProps) => {
               justifyContent="center"
               alignItems="center"
             >
-              <Box>{title}</Box>
+              <Typography variant="h6">{title}</Typography>
             </Grid>
             <Grid item xs={4}>
               <Grid container item spacing={3}>
                 <Grid item xs={4}>
                   {completed ? (
-                    <IconButton aria-label="checked" size="large">
+                    <IconButton aria-label="checked" size="medium">
                       <CheckBoxIcon />
                     </IconButton>
                   ) : (
-                    <IconButton aria-label="unchecked" size="large">
+                    <IconButton aria-label="unchecked" size="medium">
                       <CheckBoxOutlineBlankIcon />
                     </IconButton>
                   )}
                 </Grid>
                 <Grid item xs={4}>
-                  <IconButton aria-label="edit" size="large" onClick={() => setIsOpen(!isOpen)}>
+                  <IconButton
+                    aria-label="edit"
+                    size="medium"
+                    onClick={() => setIsOpen(!isOpen)}
+                  >
                     <EditIcon />
                   </IconButton>
                 </Grid>
                 <Grid item xs={4}>
-                  <IconButton aria-label="delete" size="large">
+                  <IconButton aria-label="delete" size="medium">
                     <DeleteIcon />
                   </IconButton>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
+          <Grid item xs={12} sx={{border: '1px solid rgba(0, 0, 0, 0.12)', p: 1, borderRadius: 2}}>This is my card description</Grid>
         </CardContent>
       </Card>
     </Box>

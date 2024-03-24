@@ -53,6 +53,7 @@ const ToDoModalForm = ({ isOpen, setIsOpen }: ToDoModalFormProps) => {
           p:1,
           display:'flex',
           justifyContent:'end',
+          gap: 2,
         }}>
           <TextField
             id="outlined-multiline-flexible"
@@ -60,9 +61,14 @@ const ToDoModalForm = ({ isOpen, setIsOpen }: ToDoModalFormProps) => {
             multiline
             maxRows={4}
           />
+          <TextField
+            id="outlined-multiline-flexible"
+            label="To do description"
+            multiline
+            maxRows={4}
+          />
           <Button sx={{
             p:1,
-            mt:2,
             display: 'flex',
             width: '20%',
             alignSelf: "end",

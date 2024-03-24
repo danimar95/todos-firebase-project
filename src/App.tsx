@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import "./App.css";
-import Authentication from "./views/Authentication";
 import Home from "./views/Home";
 
 function App() {
@@ -10,10 +9,11 @@ function App() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
+        height: "100%",
+        width: "100%",
       }}
     >
-      <Authentication isRegistration/>
+      <Home />
     </Box>
   );
 }
