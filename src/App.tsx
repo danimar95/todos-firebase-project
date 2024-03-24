@@ -19,7 +19,7 @@ function App() {
     {token ? (
      <Home />
     ): (
-      <Authentication isRegistration />
+      <Authentication />
     )}
     </Box>
   );

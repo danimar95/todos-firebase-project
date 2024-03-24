@@ -4,6 +4,7 @@ const existToken = localStorage.getItem('authToken') !== null ? JSON.parse(local
 
 const initialState = {
   token: existToken,
+  isRegistration: false,
 };
 const authSlice = createSlice({
   name: "auth",
@@ -12,9 +13,12 @@ const authSlice = createSlice({
     setToken: (state, action) => {
       state.token = action.payload;
     },
+    setIsRegistration: (state, action) => {
+      state.isRegistration = action.payload;
+    },
   },
 });
 
-export const { setToken } = authSlice.actions;
+export const { setToken, setIsRegistration } = authSlice.actions;
 export const selectCount = (state: RootState) => state.auth.token
 export default authSlice.reducer;
