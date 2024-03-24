@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
+const existToken = localStorage.getItem('authToken') !== null ? JSON.parse(localStorage.getItem('authToken')!) : '';
 
 const initialState = {
-  token: '',
+  token: existToken,
 };
 const authSlice = createSlice({
   name: "auth",

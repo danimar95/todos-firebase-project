@@ -30,13 +30,13 @@ const Authentication = ({
     const registerUser = await register(auth, email, password)
     .then(async(userCredential) => {
       const token = await userCredential.user.getIdToken()
-      dispatch(setToken(token))
+      dispatch(setToken(token));
+      localStorage.setItem('authToken', JSON.stringify(token));
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       console.log(errorCode, errorMessage);
-      // ..
     });
   };
 
