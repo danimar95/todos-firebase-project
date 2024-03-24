@@ -1,9 +1,20 @@
-import './App.css';
-import CardList from './components/layout/CardsList';
+import { Box } from "@mui/material";
+import "./App.css";
+import Authentication from "./views/Authentication";
+import Home from "./views/Home";
 
 function App() {
   return (
-    <CardList />
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <Authentication isRegistration/>
+    </Box>
   );
 }
 
