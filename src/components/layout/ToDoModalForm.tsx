@@ -12,7 +12,7 @@ import {
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAppSelector } from "../../hooks";
-import { child, getDatabase, push, ref, set, update } from "firebase/database";
+import { getDatabase, ref, set, update } from "firebase/database";
 import { v4 as uuidv4 } from "uuid";
 
 interface ToDoModalFormProps {
@@ -24,6 +24,7 @@ const ToDoModalForm = ({ isOpen, setIsOpen }: ToDoModalFormProps) => {
   const token = useAppSelector((state) => state.auth.token);
   const isEditing = useAppSelector((state) => state.todos.isEditing);
   const currentTodo = useAppSelector((state) => state.todos.currentTodo);
+  const todos = useAppSelector((state) => state.todos.todos);
   const [title, setTite] = useState("");
   const [description, setDescription] = useState("");
   const [isCompleted, setIsCompleted] = useState(false);
@@ -43,11 +44,8 @@ const ToDoModalForm = ({ isOpen, setIsOpen }: ToDoModalFormProps) => {
 
     const db = getDatabase();
     await set(ref(db, `users/${token}/todos/${data.id}`), data)
-      .then((res: any) => {
+      .then(() => {
         setIsOpen(false);
-        console.log("respuests", res);
-        const todosData = Object.values(res);
-        console.log("todosData", todosData);
       })
       .catch((err) => {
         setIsOpen(false);
@@ -65,12 +63,9 @@ const ToDoModalForm = ({ isOpen, setIsOpen }: ToDoModalFormProps) => {
       isCompleted: isCompleted,
     };
 
-    const updates: any = {};
-    updates[`users/${token}/todos/${currentTodo.id}`] = updatedTodo;
-    return await update(ref(db), updates)
-      .then((res) => {
+    return await update(ref(db), {[`users/${token}/todos/${currentTodo.id}`]: updatedTodo})
+      .then(() => {
         setIsOpen(false);
-        console.log("succesfully updated todo");
       })
       .catch((error) => {
         setIsOpen(false);
@@ -81,6 +76,7 @@ const ToDoModalForm = ({ isOpen, setIsOpen }: ToDoModalFormProps) => {
   useEffect(() => {
     setTite(currentTodo.title || "");
     setDescription(currentTodo.description || "");
+    setIsCompleted(currentTodo.isCompleted || false);
   }, [currentTodo]);
 
   return (
@@ -97,7 +93,7 @@ const ToDoModalForm = ({ isOpen, setIsOpen }: ToDoModalFormProps) => {
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 600,
-          bgcolor: "background.paper",
+          bgcolor: "#e7e1e5",
           boxShadow: 24,
           borderRadius: 2,
           p: 4,
@@ -141,6 +137,7 @@ const ToDoModalForm = ({ isOpen, setIsOpen }: ToDoModalFormProps) => {
                 <Switch
                   checked={isCompleted}
                   onChange={() => setIsCompleted(!isCompleted)}
+                  color="secondary"
                 />
               }
               label={`${currentTodo.isCompleted ? "Completed" : "Pending"}`}

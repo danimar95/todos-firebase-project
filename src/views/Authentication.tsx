@@ -33,8 +33,9 @@ const Authentication = () => {
         })
         .catch((error) => {
           const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorCode, errorMessage);
+          if (errorCode === "auth/email-already-in-use") {
+            alert("Error: Email is already used.");
+          }
         });
     } else {
       await logIn(auth, email, password)
@@ -47,14 +48,12 @@ const Authentication = () => {
         })
         .catch((error) => {
           const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorCode, errorMessage);
           if (errorCode === "auth/invalid-credential") {
-            console.log(
+            alert(
               "Invalid credentials. Please review them or go to the Register Form first"
             );
           } else {
-            console.log(errorMessage);
+            alert("Unknown error. Please try again");
           }
         });
     }
@@ -83,12 +82,13 @@ const Authentication = () => {
     >
       <FormControl
         sx={{
-          p: 1,
+          p: 2,
           display: "flex",
           gap: 2,
-          width: "500px",
+          width: "300px",
           borderRadius: 2,
           boxShadow: "0px 10px 15px -3px rgba(0,0,0,0.1)",
+          bgcolor: "#cec9d6",
         }}
       >
         <Typography variant="h6" component="h2">
@@ -121,7 +121,10 @@ const Authentication = () => {
               p: 1,
               mt: 2,
               display: "flex",
-              width: "30%",
+              width: "50%",
+              borderRadius: 2,
+              color: "#4a4767",
+              fontWeight: "500",
             }}
             onClick={handleRegister}
           >
@@ -132,7 +135,10 @@ const Authentication = () => {
               p: 1,
               mt: 2,
               display: "flex",
-              width: "30%",
+              width: "50%",
+              borderRadius: 2,
+              color: "#4a4767",
+              fontWeight: "500",
             }}
             onClick={handleSubmit}
           >

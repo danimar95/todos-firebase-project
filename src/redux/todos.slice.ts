@@ -10,12 +10,17 @@ export interface Todos {
 
 interface AuthStateProps {
   todos: Todos[];
+  filteredTodos: Todos[];
   isLoading: boolean;
   isEditing: boolean;
   currentTodo: Todos;
+  filter: string;
 };
+
 const initialState : AuthStateProps = {
   todos : [],
+  filteredTodos: [],
+  filter: "all",
   isLoading: true,
   isEditing: false,
   currentTodo: {
@@ -34,17 +39,23 @@ const todosSlice = createSlice({
       state.todos = action.payload;
       state.isLoading = false;
     },
-    addTodo: (state, action) => {
-      state.todos.unshift(action.payload)
-    },
     setIsEditing: (state, action) => {
       state.isEditing = action.payload;
     },
     setCurrentTodo: (state, action) => {
      state.currentTodo = action.payload;
     },
+    setFilter: (state, action) => {
+      state.filter = action.payload;
+    },
+    setFilteredTodos: (state) => {
+      let filterByState: Todos[] = state.todos;
+      if (state.filter === "completed") filterByState = state.todos.filter((todo) =>  todo.isCompleted === true);
+      else if (state.filter === "pending") filterByState = state.todos.filter((todo) =>  todo.isCompleted === false);
+      state.filteredTodos = filterByState;
+    },
   },
 });
 
-export const { setTodos, setIsEditing, setCurrentTodo } = todosSlice.actions;
+export const { setTodos, setIsEditing, setCurrentTodo, setFilteredTodos, setFilter } = todosSlice.actions;
 export default todosSlice.reducer;

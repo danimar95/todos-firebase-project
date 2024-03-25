@@ -18,10 +18,10 @@ const TopBar = () => {
   };
   return (
     <AppBar
-      position="static"
+      position="fixed"
       sx={{
-        bgcolor: "#B2C8BA",
-        color: "#435B66",
+        bgcolor: "#4a4767",
+        color: "#e7e1e5",
         fontWeight: 600,
         width: "100%",
       }}

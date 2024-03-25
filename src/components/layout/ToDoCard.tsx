@@ -7,11 +7,11 @@ import {
   Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import EditIcon from "@mui/icons-material/Edit";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import DoneIcon from "@mui/icons-material/Done";
+import PendingIcon from "@mui/icons-material/Pending";
 import { Dispatch, SetStateAction } from "react";
-import { getDatabase, ref, remove, set } from "firebase/database";
+import { getDatabase, ref, remove } from "firebase/database";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { Todos, setCurrentTodo, setIsEditing } from "../../redux/todos.slice";
 
@@ -27,13 +27,9 @@ const ToDoCard = ({ isOpen, setIsOpen, todo }: TodoCardProps) => {
   const dispatch = useAppDispatch();
   const handleDeleteTodo = () => {
     const db = getDatabase();
-    remove(ref(db, `users/${token}/todos/${id}`))
-      .then(() => {
-        console.log("deleted successfully");
-      })
-      .catch((error) => {
-        console.log("error deleting", error);
-      });
+    remove(ref(db, `users/${token}/todos/${id}`)).catch((error) => {
+      console.log("error deleting", error);
+    });
   };
 
   const handleEditTodo = () => {
@@ -47,32 +43,36 @@ const ToDoCard = ({ isOpen, setIsOpen, todo }: TodoCardProps) => {
       <Card
         variant="outlined"
         sx={{
-          bgcolor: "#EBF3E8",
+          bgcolor: "#cec9d6",
           boxShadow: 1,
           borderRadius: 2,
-          p: 2,
           minWidth: 500,
+          px: 2
         }}
       >
-        <CardContent sx={{ display: "flex", gap: 3, flexDirection: "column" }}>
+        <CardContent sx={{ display: "flex", flexDirection: "column", p: 1 }}>
           <Grid container spacing={2}>
             <Grid
               item
               xs={10}
               display="flex"
-              justifyContent="center"
+              justifyContent="start"
               alignItems="center"
+              gap={2}
             >
               {isCompleted ? (
-                <IconButton aria-label="checked" size="medium">
-                  <CheckBoxIcon />
-                </IconButton>
+                <DoneIcon color="disabled" />
               ) : (
-                <IconButton aria-label="unchecked" size="medium">
-                  <CheckBoxOutlineBlankIcon />
-                </IconButton>
+                <PendingIcon color="disabled" />
               )}
-              <Typography variant="h6">{title}</Typography>
+              <Typography
+                variant="overline"
+                sx={{
+                  textDecorationLine: isCompleted ? "line-through" : "none",
+                }}
+              >
+                {title}
+              </Typography>
             </Grid>
             <Grid item xs={2}>
               <Grid container item spacing={3}>
