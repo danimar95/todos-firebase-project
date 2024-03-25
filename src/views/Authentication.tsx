@@ -14,7 +14,6 @@ import { logIn, signUp } from "../services/auth/requests";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { setIsRegistration, setToken } from "../redux/auth.slice";
 
-
 const Authentication = () => {
   const [hidePass, setHidePass] = useState(true);
   const [email, setEmail] = useState("");
@@ -24,49 +23,54 @@ const Authentication = () => {
 
   const handleSubmit = async () => {
     if (isRegistration) {
-     await signUp(auth, email, password)
-      .then(async (userCredential) => {
-        const token = await userCredential.user.getIdToken();
-        dispatch(setToken(token));
-        localStorage.setItem("authToken", JSON.stringify(token));
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-      });
+      await signUp(auth, email, password)
+        .then(async (userCredential) => {
+          dispatch(setToken(userCredential.user.uid));
+          localStorage.setItem(
+            "authToken",
+            JSON.stringify(userCredential.user.uid)
+          );
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, errorMessage);
+        });
     } else {
-     await logIn(auth, email, password)
-      .then(async (userCredential) => {
-        const token = await userCredential.user.getIdToken();
-        dispatch(setToken(token));
-        localStorage.setItem("authToken", JSON.stringify(token));
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        if (errorCode === "auth/invalid-credential"){
-          alert('Invalid credentials. Please review them or go to the Register Form first')
-        } else {
-          alert(errorMessage)
-        }
-      });
+      await logIn(auth, email, password)
+        .then(async (userCredential) => {
+          dispatch(setToken(userCredential.user.uid));
+          localStorage.setItem(
+            "authToken",
+            JSON.stringify(userCredential.user.uid)
+          );
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, errorMessage);
+          if (errorCode === "auth/invalid-credential") {
+            console.log(
+              "Invalid credentials. Please review them or go to the Register Form first"
+            );
+          } else {
+            console.log(errorMessage);
+          }
+        });
     }
   };
 
   const handleRegister = () => {
-    dispatch(setIsRegistration(!isRegistration))
+    dispatch(setIsRegistration(!isRegistration));
   };
 
-
-const resetValues = () => {
-    setEmail('');
-    setPassword('');
-};
+  const resetValues = () => {
+    setEmail("");
+    setPassword("");
+  };
 
   useEffect(() => {
-   resetValues();
+    resetValues();
   }, [isRegistration]);
 
   return (
@@ -90,7 +94,11 @@ const resetValues = () => {
         <Typography variant="h6" component="h2">
           {isRegistration ? "Register Form" : "Log in Form"}
         </Typography>
-        <TextField label="Email" onChange={(e) => setEmail(e.target.value)} value={email}/>
+        <TextField
+          label="Email"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+        />
         <Box sx={{ position: "relative" }}>
           <TextField
             label="Password"

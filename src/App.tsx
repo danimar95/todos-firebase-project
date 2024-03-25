@@ -3,9 +3,12 @@ import "./App.css";
 import Home from "./views/Home";
 import Authentication from "./views/Authentication";
 import { useAppSelector } from "./hooks";
+import { useEffect } from "react";
+import { getAuth } from "firebase/auth";
 
 function App() {
   const token = useAppSelector((state) => state.auth.token);
+
   return (
     <Box
       sx={{

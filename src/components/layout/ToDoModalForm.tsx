@@ -2,24 +2,86 @@ import {
   Box,
   Button,
   FormControl,
+  FormControlLabel,
   IconButton,
   Modal,
+  Switch,
   TextField,
   Typography,
 } from "@mui/material";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import { useAppSelector } from "../../hooks";
+import { child, getDatabase, push, ref, set, update } from "firebase/database";
+import { v4 as uuidv4 } from "uuid";
 
 interface ToDoModalFormProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  isEditing: boolean;
 }
 
 const ToDoModalForm = ({ isOpen, setIsOpen }: ToDoModalFormProps) => {
+  const token = useAppSelector((state) => state.auth.token);
+  const isEditing = useAppSelector((state) => state.todos.isEditing);
+  const currentTodo = useAppSelector((state) => state.todos.currentTodo);
+  const [title, setTite] = useState("");
+  const [description, setDescription] = useState("");
+  const [isCompleted, setIsCompleted] = useState(false);
+
   const handleClose = () => {
     setIsOpen(false);
   };
+
+  const createTodo = async () => {
+    const data = {
+      id: uuidv4(),
+      title: title,
+      description: description,
+      isCompleted: isCompleted,
+      createdAt: new Date().toDateString(),
+    };
+
+    const db = getDatabase();
+    await set(ref(db, `users/${token}/todos/${data.id}`), data)
+      .then((res: any) => {
+        setIsOpen(false);
+        console.log("respuests", res);
+        const todosData = Object.values(res);
+        console.log("todosData", todosData);
+      })
+      .catch((err) => {
+        setIsOpen(false);
+        console.log("err", err);
+      });
+  };
+
+  const editTodo = async() => {
+    const db = getDatabase();
+    const updatedTodo = {
+      title: title,
+      id: currentTodo.id,
+      description: description,
+      createdAt: currentTodo.createdAt,
+      isCompleted: isCompleted,
+    };
+
+    const updates: any = {};
+    updates[`users/${token}/todos/${currentTodo.id}`] = updatedTodo;
+    return await update(ref(db), updates)
+      .then((res) => {
+        setIsOpen(false);
+        console.log("succesfully updated todo");
+      })
+      .catch((error) => {
+        setIsOpen(false);
+        console.log("error", error);
+      });
+  };
+
+  useEffect(() => {
+    setTite(currentTodo.title || "");
+    setDescription(currentTodo.description || "");
+  }, [currentTodo]);
 
   return (
     <Modal
@@ -41,38 +103,60 @@ const ToDoModalForm = ({ isOpen, setIsOpen }: ToDoModalFormProps) => {
           p: 4,
         }}
       >
-        <Box display='flex' justifyContent='space-between'>
+        <Box display="flex" justifyContent="space-between">
           <Typography id="modal-modal-title" variant="h6">
-            Add To Do
+            {`${isEditing ? "Edit" : "Add"} To Do`}
           </Typography>
           <IconButton aria-label="close-modal" onClick={() => setIsOpen(false)}>
             <CloseIcon />
           </IconButton>
         </Box>
-        <FormControl sx={{
-          p:1,
-          display:'flex',
-          justifyContent:'end',
-          gap: 2,
-        }}>
+        <FormControl
+          sx={{
+            p: 1,
+            display: "flex",
+            justifyContent: "end",
+            gap: 2,
+          }}
+        >
           <TextField
             id="outlined-multiline-flexible"
-            label="To do name"
+            label="To do title"
             multiline
-            maxRows={4}
+            maxRows={2}
+            value={title}
+            onChange={(e) => setTite(e.target.value)}
           />
           <TextField
             id="outlined-multiline-flexible"
             label="To do description"
             multiline
             maxRows={4}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
-          <Button sx={{
-            p:1,
-            display: 'flex',
-            width: '20%',
-            alignSelf: "end",
-          }}>Submit</Button>
+          <Box display="flex" justifyContent="space-between">
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={isCompleted}
+                  onChange={() => setIsCompleted(!isCompleted)}
+                />
+              }
+              label={`${currentTodo.isCompleted ? "Completed" : "Pending"}`}
+            />
+            <Button
+              sx={{
+                p: 1,
+                display: "flex",
+                width: "20%",
+                alignSelf: "end",
+              }}
+              onClick={isEditing ? editTodo : createTodo}
+            >
+              Submit
+            </Button>
+          </Box>
         </FormControl>
       </Box>
     </Modal>
