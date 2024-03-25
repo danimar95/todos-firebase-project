@@ -29,7 +29,7 @@ Given the fact that the to do list corresponds to a user and that it can only be
     ```
 3. **Start the React Application and Access it running:**
      ```bash
-     npm run dev 
+     npm run start 
     ```
     
     Access the application via `https://localhost:3000` (in case you are not running anything in port 3000)
