@@ -25,10 +25,11 @@ const ToDoCard = ({ isOpen, setIsOpen, todo }: TodoCardProps) => {
   const { title, isCompleted, description, id, createdAt } = todo;
   const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
+  
   const handleDeleteTodo = () => {
     const db = getDatabase();
     remove(ref(db, `users/${token}/todos/${id}`)).catch((error) => {
-      console.log("error deleting", error);
+      console.error("error deleting", error);
     });
   };
 

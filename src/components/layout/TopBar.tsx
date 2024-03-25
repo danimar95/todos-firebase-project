@@ -10,7 +10,6 @@ const TopBar = () => {
       .then(() => {
         dispatch(setToken(""));
         localStorage.removeItem('authToken');
-        console.log("Signed out successfully");
       })
       .catch((error) => {
         console.error('error', error);

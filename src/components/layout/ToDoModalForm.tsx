@@ -49,7 +49,7 @@ const ToDoModalForm = ({ isOpen, setIsOpen }: ToDoModalFormProps) => {
       })
       .catch((err) => {
         setIsOpen(false);
-        console.log("err", err);
+        console.error("err", err);
       });
   };
 
@@ -69,7 +69,7 @@ const ToDoModalForm = ({ isOpen, setIsOpen }: ToDoModalFormProps) => {
       })
       .catch((error) => {
         setIsOpen(false);
-        console.log("error", error);
+        console.error("error", error);
       });
   };
 
